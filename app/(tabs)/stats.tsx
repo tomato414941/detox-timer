@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { View } from '@/components/Themed';
-import { Timer } from '@/components/Timer';
+import { Stats } from '@/components/Stats';
 
-export default function TimerScreen() {
+export default function StatsScreen() {
   return (
     <View style={styles.container}>
-      <Timer />
+      <Stats />
     </View>
   );
 }
