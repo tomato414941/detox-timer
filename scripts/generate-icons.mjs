@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,102 +7,74 @@ const assetsDir = join(__dirname, '..', 'assets', 'images');
 
 const THEME_COLOR = '#4A90A4';
 const BG_COLOR = '#FFFFFF';
+const LUCIDE_TIMER_VIEWBOX_SIZE = 24;
 
-// SVG for main icon (timer with clock hands)
-function createIconSVG(size) {
-  const center = size / 2;
-  const radius = size * 0.35;
-  const innerRadius = size * 0.30;
-  const padding = size * 0.15;
+function createLucideTimerIconSVG({
+  size,
+  bgColor,
+  strokeColor,
+  strokeWidth,
+  iconRatio,
+}) {
+  const iconSize = Math.round(size * iconRatio);
+  const offset = Math.round((size - iconSize) / 2);
+  const scale = iconSize / LUCIDE_TIMER_VIEWBOX_SIZE;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="${size}" height="${size}" fill="${BG_COLOR}"/>
-
-  <!-- Outer ring -->
-  <circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="${THEME_COLOR}" stroke-width="${size * 0.04}"/>
-
-  <!-- Inner circle -->
-  <circle cx="${center}" cy="${center}" r="${innerRadius * 0.15}" fill="${THEME_COLOR}"/>
-
-  <!-- Hour markers -->
-  ${[0, 90, 180, 270].map(angle => {
-    const rad = (angle - 90) * Math.PI / 180;
-    const x1 = center + (radius - size * 0.02) * Math.cos(rad);
-    const y1 = center + (radius - size * 0.02) * Math.sin(rad);
-    const x2 = center + (radius - size * 0.06) * Math.cos(rad);
-    const y2 = center + (radius - size * 0.06) * Math.sin(rad);
-    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${THEME_COLOR}" stroke-width="${size * 0.025}" stroke-linecap="round"/>`;
-  }).join('\n  ')}
-
-  <!-- Hour hand (shorter) -->
-  <line x1="${center}" y1="${center}" x2="${center + innerRadius * 0.5}" y2="${center - innerRadius * 0.3}" stroke="${THEME_COLOR}" stroke-width="${size * 0.035}" stroke-linecap="round"/>
-
-  <!-- Minute hand (longer) -->
-  <line x1="${center}" y1="${center}" x2="${center}" y2="${center - innerRadius * 0.7}" stroke="${THEME_COLOR}" stroke-width="${size * 0.025}" stroke-linecap="round"/>
-
-  <!-- Top button/stem -->
-  <rect x="${center - size * 0.025}" y="${center - radius - size * 0.08}" width="${size * 0.05}" height="${size * 0.06}" fill="${THEME_COLOR}" rx="${size * 0.01}"/>
+  <!-- Based on Lucide 'timer' icon (ISC License): https://lucide.dev/icons/timer -->
+  ${bgColor === null ? '' : `<rect width="${size}" height="${size}" fill="${bgColor}"/>`}
+  <g transform="translate(${offset} ${offset}) scale(${scale})" fill="none" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="10" x2="14" y1="2" y2="2" />
+    <line x1="12" x2="15" y1="14" y2="11" />
+    <circle cx="12" cy="14" r="8" />
+  </g>
 </svg>`;
+}
+
+// SVG for main icon (App Store: must be opaque)
+function createIconSVG(size) {
+  return createLucideTimerIconSVG({
+    size,
+    bgColor: THEME_COLOR,
+    strokeColor: BG_COLOR,
+    strokeWidth: 1,
+    iconRatio: 720 / 1024,
+  });
 }
 
 // SVG for adaptive icon (foreground only, transparent background)
 function createAdaptiveIconSVG(size) {
-  const center = size / 2;
-  const radius = size * 0.25;  // Smaller for safe zone
-  const innerRadius = size * 0.22;
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
-  <!-- Transparent background -->
-  <rect width="${size}" height="${size}" fill="none"/>
-
-  <!-- Outer ring -->
-  <circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="${THEME_COLOR}" stroke-width="${size * 0.03}"/>
-
-  <!-- Inner circle -->
-  <circle cx="${center}" cy="${center}" r="${innerRadius * 0.15}" fill="${THEME_COLOR}"/>
-
-  <!-- Hour markers -->
-  ${[0, 90, 180, 270].map(angle => {
-    const rad = (angle - 90) * Math.PI / 180;
-    const x1 = center + (radius - size * 0.015) * Math.cos(rad);
-    const y1 = center + (radius - size * 0.015) * Math.sin(rad);
-    const x2 = center + (radius - size * 0.045) * Math.cos(rad);
-    const y2 = center + (radius - size * 0.045) * Math.sin(rad);
-    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${THEME_COLOR}" stroke-width="${size * 0.02}" stroke-linecap="round"/>`;
-  }).join('\n  ')}
-
-  <!-- Hour hand -->
-  <line x1="${center}" y1="${center}" x2="${center + innerRadius * 0.45}" y2="${center - innerRadius * 0.25}" stroke="${THEME_COLOR}" stroke-width="${size * 0.028}" stroke-linecap="round"/>
-
-  <!-- Minute hand -->
-  <line x1="${center}" y1="${center}" x2="${center}" y2="${center - innerRadius * 0.6}" stroke="${THEME_COLOR}" stroke-width="${size * 0.02}" stroke-linecap="round"/>
-
-  <!-- Top button -->
-  <rect x="${center - size * 0.02}" y="${center - radius - size * 0.06}" width="${size * 0.04}" height="${size * 0.045}" fill="${THEME_COLOR}" rx="${size * 0.008}"/>
-</svg>`;
+  // Keep it slightly smaller to avoid clipping with different adaptive masks.
+  return createLucideTimerIconSVG({
+    size,
+    bgColor: null,
+    strokeColor: THEME_COLOR,
+    strokeWidth: 1,
+    iconRatio: 0.62,
+  });
 }
 
 // SVG for splash icon
 function createSplashIconSVG(size) {
-  return createIconSVG(size);
+  return createLucideTimerIconSVG({
+    size,
+    bgColor: BG_COLOR,
+    strokeColor: THEME_COLOR,
+    strokeWidth: 1,
+    iconRatio: 720 / 1024,
+  });
 }
 
 // SVG for favicon (simpler design for small size)
 function createFaviconSVG(size) {
-  const center = size / 2;
-  const radius = size * 0.38;
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
-  <rect width="${size}" height="${size}" fill="${BG_COLOR}"/>
-  <circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="${THEME_COLOR}" stroke-width="${size * 0.06}"/>
-  <circle cx="${center}" cy="${center}" r="${size * 0.08}" fill="${THEME_COLOR}"/>
-  <line x1="${center}" y1="${center}" x2="${center + radius * 0.5}" y2="${center - radius * 0.3}" stroke="${THEME_COLOR}" stroke-width="${size * 0.08}" stroke-linecap="round"/>
-  <line x1="${center}" y1="${center}" x2="${center}" y2="${center - radius * 0.65}" stroke="${THEME_COLOR}" stroke-width="${size * 0.06}" stroke-linecap="round"/>
-</svg>`;
+  return createLucideTimerIconSVG({
+    size,
+    bgColor: BG_COLOR,
+    strokeColor: THEME_COLOR,
+    strokeWidth: 2,
+    iconRatio: 0.78,
+  });
 }
 
 // Write SVG files

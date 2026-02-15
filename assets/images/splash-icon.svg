@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
+  <!-- Based on Lucide 'timer' icon (ISC License): https://lucide.dev/icons/timer -->
   <rect width="512" height="512" fill="#FFFFFF"/>
-
-  <!-- Outer ring -->
-  <circle cx="256" cy="256" r="179.2" fill="none" stroke="#4A90A4" stroke-width="20.48"/>
-
-  <!-- Inner circle -->
-  <circle cx="256" cy="256" r="23.04" fill="#4A90A4"/>
-
-  <!-- Hour markers -->
-  <line x1="256" y1="87.04000000000002" x2="256" y2="107.52000000000001" stroke="#4A90A4" stroke-width="12.8" stroke-linecap="round"/>
-  <line x1="424.96" y1="256" x2="404.48" y2="256" stroke="#4A90A4" stroke-width="12.8" stroke-linecap="round"/>
-  <line x1="256" y1="424.96" x2="256" y2="404.48" stroke="#4A90A4" stroke-width="12.8" stroke-linecap="round"/>
-  <line x1="87.04000000000002" y1="256" x2="107.52000000000001" y2="256" stroke="#4A90A4" stroke-width="12.8" stroke-linecap="round"/>
-
-  <!-- Hour hand (shorter) -->
-  <line x1="256" y1="256" x2="332.8" y2="209.92000000000002" stroke="#4A90A4" stroke-width="17.92" stroke-linecap="round"/>
-
-  <!-- Minute hand (longer) -->
-  <line x1="256" y1="256" x2="256" y2="148.48000000000002" stroke="#4A90A4" stroke-width="12.8" stroke-linecap="round"/>
-
-  <!-- Top button/stem -->
-  <rect x="243.2" y="35.84000000000001" width="25.6" height="30.72" fill="#4A90A4" rx="5.12"/>
+  <g transform="translate(76 76) scale(15)" fill="none" stroke="#4A90A4" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="10" x2="14" y1="2" y2="2" />
+    <line x1="12" x2="15" y1="14" y2="11" />
+    <circle cx="12" cy="14" r="8" />
+  </g>
 </svg>
