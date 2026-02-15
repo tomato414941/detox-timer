@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Transparent background -->
+  <rect width="1024" height="1024" fill="none"/>
+
+  <!-- Outer ring -->
+  <circle cx="512" cy="512" r="256" fill="none" stroke="#4A90A4" stroke-width="30.72"/>
+
+  <!-- Inner circle -->
+  <circle cx="512" cy="512" r="33.792" fill="#4A90A4"/>
+
+  <!-- Hour markers -->
+  <line x1="512" y1="271.36" x2="512" y2="302.08" stroke="#4A90A4" stroke-width="20.48" stroke-linecap="round"/>
+  <line x1="752.64" y1="512" x2="721.9200000000001" y2="512" stroke="#4A90A4" stroke-width="20.48" stroke-linecap="round"/>
+  <line x1="512" y1="752.64" x2="512" y2="721.9200000000001" stroke="#4A90A4" stroke-width="20.48" stroke-linecap="round"/>
+  <line x1="271.36" y1="512" x2="302.08" y2="512" stroke="#4A90A4" stroke-width="20.48" stroke-linecap="round"/>
+
+  <!-- Hour hand -->
+  <line x1="512" y1="512" x2="613.376" y2="455.68" stroke="#4A90A4" stroke-width="28.672" stroke-linecap="round"/>
+
+  <!-- Minute hand -->
+  <line x1="512" y1="512" x2="512" y2="376.832" stroke="#4A90A4" stroke-width="20.48" stroke-linecap="round"/>
+
+  <!-- Top button -->
+  <rect x="491.52" y="194.56" width="40.96" height="46.08" fill="#4A90A4" rx="8.192"/>
+</svg>
