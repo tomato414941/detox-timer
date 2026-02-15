@@ -14,7 +14,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tomato414941.detoxtimer",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
