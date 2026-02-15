@@ -16,7 +16,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tomato414941.detoxtimer",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "usesNonExemptEncryption": false
     },
     "android": {
       "adaptiveIcon": {
