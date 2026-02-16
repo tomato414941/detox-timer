@@ -1,22 +1,19 @@
 import { StyleSheet } from 'react-native';
 import { Text, View } from './Themed';
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { getTodayStats, getWeeklyTotal, getStreak } from '@/lib/storage';
 import { DailyStats } from '@/types';
-
-function formatDuration(ms: number): string {
-  const totalMinutes = Math.floor(ms / 60000);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (hours > 0) {
-    return `${hours}時間${minutes}分`;
-  }
-  return `${minutes}分`;
-}
+import {
+  formatSessionCount,
+  formatStatsDuration,
+  formatStreakDays,
+  getLocale,
+  t,
+} from '@/lib/i18n';
 
 export function Stats() {
+  const locale = getLocale();
   const [todayStats, setTodayStats] = useState<DailyStats | null>(null);
   const [weeklyTotal, setWeeklyTotal] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -44,7 +41,7 @@ export function Stats() {
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text style={styles.loadingText}>読み込み中...</Text>
+        <Text style={styles.loadingText}>{t('statsLoading', locale)}</Text>
       </View>
     );
   }
@@ -52,25 +49,23 @@ export function Stats() {
   return (
     <View style={styles.container}>
       <View style={styles.statCard}>
-        <Text style={styles.statLabel}>今日のデトックス</Text>
+        <Text style={styles.statLabel}>{t('statsToday', locale)}</Text>
         <Text style={styles.statValue}>
-          {todayStats ? formatDuration(todayStats.totalDuration) : '0分'}
+          {todayStats ? formatStatsDuration(todayStats.totalDuration, locale) : formatStatsDuration(0, locale)}
         </Text>
-        <Text style={styles.statSubtext}>
-          {todayStats?.sessionCount || 0}回のセッション
-        </Text>
+        <Text style={styles.statSubtext}>{formatSessionCount(todayStats?.sessionCount || 0, locale)}</Text>
       </View>
 
       <View style={styles.statCard}>
-        <Text style={styles.statLabel}>今週の累計</Text>
-        <Text style={styles.statValue}>{formatDuration(weeklyTotal)}</Text>
+        <Text style={styles.statLabel}>{t('statsWeekly', locale)}</Text>
+        <Text style={styles.statValue}>{formatStatsDuration(weeklyTotal, locale)}</Text>
       </View>
 
       <View style={styles.statCard}>
-        <Text style={styles.statLabel}>連続達成日数</Text>
-        <Text style={styles.statValue}>{streak}日</Text>
+        <Text style={styles.statLabel}>{t('statsStreak', locale)}</Text>
+        <Text style={styles.statValue}>{formatStreakDays(streak, locale)}</Text>
         {streak > 0 && (
-          <Text style={styles.statSubtext}>この調子で続けましょう!</Text>
+          <Text style={styles.statSubtext}>{t('statsKeepGoing', locale)}</Text>
         )}
       </View>
     </View>

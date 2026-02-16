@@ -1,7 +1,8 @@
 import { StyleSheet, Pressable } from 'react-native';
 import { Text, View } from './Themed';
-import { useDetoxSession, SessionState } from '@/hooks/useDetoxSession';
+import { useDetoxSession } from '@/hooks/useDetoxSession';
 import { DetoxSession } from '@/types';
+import { formatResultText, getLocale, t } from '@/lib/i18n';
 
 function formatDuration(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000);
@@ -15,20 +16,12 @@ function formatDuration(ms: number): string {
   return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
-function formatMinutes(ms: number): string {
-  const minutes = Math.floor(ms / 60000);
-  if (minutes < 1) {
-    const seconds = Math.floor(ms / 1000);
-    return `${seconds}秒間`;
-  }
-  return `${minutes}分間`;
-}
-
 interface TimerProps {
   onSessionEnd?: (session: DetoxSession) => void;
 }
 
 export function Timer({ onSessionEnd }: TimerProps) {
+  const locale = getLocale();
   const {
     sessionState,
     elapsedTime,
@@ -47,11 +40,9 @@ export function Timer({ onSessionEnd }: TimerProps) {
   if (sessionState === 'idle') {
     return (
       <View style={styles.container}>
-        <Text style={styles.instruction}>
-          スマホを置いてデトックスを始めましょう
-        </Text>
+        <Text style={styles.instruction}>{t('timerInstruction', locale)}</Text>
         <Pressable style={styles.startButton} onPress={startSession}>
-          <Text style={styles.startButtonText}>開始</Text>
+          <Text style={styles.startButtonText}>{t('timerStart', locale)}</Text>
         </Pressable>
       </View>
     );
@@ -60,28 +51,24 @@ export function Timer({ onSessionEnd }: TimerProps) {
   if (sessionState === 'active') {
     return (
       <View style={styles.container}>
-        <Text style={styles.activeLabel}>デトックス中...</Text>
+        <Text style={styles.activeLabel}>{t('timerActive', locale)}</Text>
         <Text style={styles.timer}>{formatDuration(elapsedTime)}</Text>
-        <Text style={styles.hint}>
-          画面をロックしてスマホを置いてください
-        </Text>
+        <Text style={styles.hint}>{t('timerHint', locale)}</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.congratsLabel}>おかえりなさい!</Text>
-      <Text style={styles.resultText}>
-        {formatMinutes(elapsedTime)}デトックスしました
-      </Text>
+      <Text style={styles.congratsLabel}>{t('timerWelcomeBack', locale)}</Text>
+      <Text style={styles.resultText}>{formatResultText(elapsedTime, locale)}</Text>
       <Text style={styles.timer}>{formatDuration(elapsedTime)}</Text>
       <View style={styles.buttonRow}>
         <Pressable style={styles.continueButton} onPress={continueSession}>
-          <Text style={styles.continueButtonText}>もう少し続ける</Text>
+          <Text style={styles.continueButtonText}>{t('timerContinue', locale)}</Text>
         </Pressable>
         <Pressable style={styles.endButton} onPress={handleEndSession}>
-          <Text style={styles.endButtonText}>終了する</Text>
+          <Text style={styles.endButtonText}>{t('timerEnd', locale)}</Text>
         </Pressable>
       </View>
     </View>
